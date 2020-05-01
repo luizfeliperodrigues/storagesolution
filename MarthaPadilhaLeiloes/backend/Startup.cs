@@ -47,6 +47,7 @@ namespace MarthaPadilhaLeiloes
 
             app.UseHttpsRedirection();
             app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
