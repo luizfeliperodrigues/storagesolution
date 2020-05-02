@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MarthaPadilhaLeiloes.Data;
-using MarthaPadilhaLeiloes.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using repository;
 
 namespace MarthaPadilhaLeiloes.Controllers
 {
@@ -14,9 +13,9 @@ namespace MarthaPadilhaLeiloes.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        public readonly DataContext _context;
+        public readonly MarthaPadilhaLeiloesContext _context;
 
-        public ValuesController(DataContext context)
+        public ValuesController(MarthaPadilhaLeiloesContext context)
         {
             _context = context;
         }
@@ -44,7 +43,7 @@ namespace MarthaPadilhaLeiloes.Controllers
         {
             try
             {
-                var comitente = await _context.Comitentes.FirstOrDefaultAsync(c => c.ComitenteId == id);
+                var comitente = await _context.Comitentes.FirstOrDefaultAsync(c => c.Id == id);
                 return Ok(comitente);
             }
             catch (System.Exception)

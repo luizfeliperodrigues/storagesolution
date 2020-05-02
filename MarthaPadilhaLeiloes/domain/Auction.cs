@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace domain
 {
@@ -8,6 +9,7 @@ namespace domain
         public int BusinessCode { get; set; }
         public Negotiation Negotiation { get; set; }
         public DateTime Date { get; set; }
+        public List<AuctionItem> AuctionItems { get; set; } = new List<AuctionItem>();
 
         public Auction(){}
 
