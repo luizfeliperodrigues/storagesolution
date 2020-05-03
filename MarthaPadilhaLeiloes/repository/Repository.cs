@@ -13,6 +13,7 @@ namespace repository
         public Repository(MarthaPadilhaLeiloesContext context)
         {
             _context = context;
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         // GERAL

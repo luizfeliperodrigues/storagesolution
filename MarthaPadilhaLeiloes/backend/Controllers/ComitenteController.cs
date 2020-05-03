@@ -69,7 +69,7 @@ namespace backend.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPut("{ComitenteId}")]
         public async Task<ActionResult> Put(int comitenteId, Comitente model)
         {
             try

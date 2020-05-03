@@ -8,11 +8,11 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TipoItemController : ControllerBase
+    public class AuctionItemController : ControllerBase
     {
         private readonly IRepository _repo;
 
-        public TipoItemController(IRepository repo)
+        public AuctionItemController(IRepository repo)
         {
             _repo = repo;
         }
@@ -22,7 +22,7 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllTipoItemAsync();
+                var results = await _repo.GetAllAuctionItemAsync();
                 return Ok(results);
             }
             catch (System.Exception)
@@ -30,33 +30,39 @@ namespace backend.Controllers
 
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
-
         }
 
-        [HttpGet("{TipoItemId}")]
-        public async Task<ActionResult> Get(int TipoItemId)
+         [HttpGet("{auctionItemId}")]
+        public async Task<ActionResult> Get(int auctionItemId)
         {
             try
             {
-                var results = await _repo.GetTipoItemByIdAsync(TipoItemId);
-                return Ok(results);
+                var auctionItemById = await _repo.GetAuctionItemByIdAsync(auctionItemId);
+                var auctionItemByAuction = await _repo.GetAllAuctionItemByAuctionAsync(auctionItemId);
+                if(auctionItemById == null)
+                {
+                    return Ok(auctionItemByAuction);
+                }
+                else
+                {
+                    return Ok(auctionItemById);
+                }
             }
             catch (System.Exception)
             {
 
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
-
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(TipoItem model)
+        public async Task<ActionResult> Post(AuctionItem model)
         {
             try
             {
                 _repo.Add(model);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/tipoitem/{model.Id}", model);
+                    return Created($"api/auctionitem/{model.Id}", model);
                 }
             }
             catch (System.Exception)
@@ -66,20 +72,19 @@ namespace backend.Controllers
             }
 
             return BadRequest();
-
         }
 
-        [HttpPut("{TipoItemId}")]
-        public async Task<ActionResult> Put(int tipoItemId, TipoItem model)
+        [HttpPut("{auctionItemId}")]
+        public async Task<ActionResult> Put(int auctionItemId, AuctionItem model)
         {
             try
             {
-                var tipoItem = await _repo.GetTipoItemByIdAsync(tipoItemId);
-                if(tipoItem == null) return NotFound();
+                var auctionItem = await _repo.GetAuctionItemByIdAsync(auctionItemId);
+                if(auctionItem == null) return NotFound();
                 
                 _repo.Update(model);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/tipoitem/{model.Id}", model);
+                    return Created($"api/auction/{model.Id}", model);
                 }
             }
             catch (System.Exception)
@@ -92,15 +97,15 @@ namespace backend.Controllers
 
         }
 
-        [HttpDelete("{TipoItemId}")]
-        public async Task<ActionResult> Delete(int tipoItemId)
+        [HttpDelete("{auctionItemId}")]
+        public async Task<ActionResult> Delete(int auctionItemId)
         {
             try
             {
-                var tipoItem = await _repo.GetTipoItemByIdAsync(tipoItemId);
-                if(tipoItem == null) return NotFound();
+                var auctionItem = await _repo.GetAuctionItemByIdAsync(auctionItemId);
+                if(auctionItem == null) return NotFound();
                 
-                _repo.Delete(tipoItem);
+                _repo.Delete(auctionItem);
                 if(await _repo.SaveChangesAsync()){
                     return Ok();
                 }
@@ -114,5 +119,6 @@ namespace backend.Controllers
             return BadRequest();
 
         }
+        
     }
 }
