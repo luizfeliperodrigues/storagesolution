@@ -30,13 +30,13 @@ namespace repository
          // Auction
          Task<Auction[]> GetAllAuctionByAsync();
          Task<Auction> GetAuctionByIdAsync(int id);
-         Task<Auction> GetAllAuctionByBusinessCodeAsync(int businessCode);
-         Task<Auction[]> GetAuctionByNegotiationAsync(Negotiation negotiation);
-         Task<Auction[]> GetAllAuctionByDateAsync(DateTime initialDate, DateTime finalDate);
+         Task<Auction> GetAuctionByBusinessCodeAsync(int businessCode);
+         Task<Auction[]> GetAllAuctionByNegotiationAsync(Negotiation negotiation);
+         Task<Auction[]> GetAllAuctionByDateAsync(DateTime initialDate, DateTime? finalDate);
 
          // AuctionItem
          Task<AuctionItem[]> GetAllAuctionItemAsync();
-         Task<AuctionItem> GetAllAuctionItemByIdAsync(int id);
+         Task<AuctionItem> GetAuctionItemByIdAsync(int id);
          Task<AuctionItem[]> GetAllAuctionItemByAuctionAsync(int auctionId);
          Task<AuctionItem[]> GetAllAuctionItemByItemAsync(int itemId);
          Task<AuctionItem[]> GetAllAuctionItemByComitenteAsync(int comitenteId);

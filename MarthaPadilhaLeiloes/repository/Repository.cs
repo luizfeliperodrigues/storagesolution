@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace repository
 {
@@ -35,121 +37,132 @@ namespace repository
         }
 
         // Comitente
-        public Task<Comitente[]> GetAllComitenteAsync()
+        public async Task<Comitente[]> GetAllComitenteAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Comitentes.ToArrayAsync();
         }
 
-        public Task<Comitente> GetComitenteByIdAsync(int id)
+        public async Task<Comitente> GetComitenteByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Comitentes.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         // TipoItem
-        public Task<TipoItem[]> GetAllTipoItemAsync()
+        public async Task<TipoItem[]> GetAllTipoItemAsync()
         {
-            throw new NotImplementedException();
+            return await _context.TipoItems.ToArrayAsync();
         }
         
-        public Task<TipoItem> GetTipoItemByIdAsync(int id)
+        public async Task<TipoItem> GetTipoItemByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.TipoItems.FirstOrDefaultAsync(t => t.Id == id);
         }
 
         // Item
-        public Task<Item[]> GetAllItemAsync()
+        public async Task<Item[]> GetAllItemAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Items.ToArrayAsync();
         }
 
-        public Task<Item[]> GetAllItemByLocalAsync(string local)
+        public async Task<Item[]> GetAllItemByLocalAsync(string local)
         {
-            throw new NotImplementedException();
+            return await _context.Items
+                .OrderBy(i => i.Local)
+                .Where(i => i.Local.ToLower().Contains(local.ToLower()))
+                .ToArrayAsync();
         }
 
-        public Task<Item[]> GetAllItemByTypeAsync(TipoItem type)
+        public async Task<Item[]> GetAllItemByTypeAsync(TipoItem type)
         {
-            throw new NotImplementedException();
+            return await _context.Items
+                .Where(i => i.TipoItemId == type.Id)
+                .OrderBy(i => i.TipoItemId)
+                .ToArrayAsync();
         }
 
-        public Task<Item> GetItemByBusinessCodeAsync(int businessCode)
+        public async Task<Item> GetItemByBusinessCodeAsync(int businessCode)
         {
-            throw new NotImplementedException();
+            return await _context.Items
+                .Where(i => i.BusinessCode == businessCode)
+                .OrderBy(i => i.BusinessCode)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<Item> GetItemByIdAsync(int id)
+        public async Task<Item> GetItemByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Items
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
         // Auction
-        public Task<Auction[]> GetAllAuctionByAsync()
+        public async Task<Auction[]> GetAllAuctionByAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Auctions.ToArrayAsync();
         }
 
-        public Task<Auction> GetAllAuctionByBusinessCodeAsync(int businessCode)
+        public async Task<Auction> GetAuctionByBusinessCodeAsync(int businessCode)
         {
-            throw new NotImplementedException();
+            return await _context.Auctions.FirstOrDefaultAsync(a => a.BusinessCode == businessCode);
         }
 
-        public Task<Auction[]> GetAllAuctionByDateAsync(DateTime initialDate, DateTime finalDate)
+        public async Task<Auction[]> GetAllAuctionByDateAsync(DateTime initialDate, DateTime? finalDate)
         {
-            throw new NotImplementedException();
+            IQueryable<Auction> query = _context.Auctions
+                .OrderByDescending(a => a.Date)
+                .Where(a => a.Date >= initialDate);
+            
+            if(finalDate.Value == null)
+            {
+                return await query.ToArrayAsync();
+            }
+            else
+            {
+                query = query.Where(a => a.Date <= finalDate);
+                return await query.ToArrayAsync();
+            }
+        }
+
+        public async Task<Auction> GetAuctionByIdAsync(int id)
+        {
+            return await _context.Auctions.FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<Auction[]> GetAllAuctionByNegotiationAsync(Negotiation negotiation)
+        {
+            return await _context.Auctions
+                .Where(a => a.Negotiation == negotiation)
+                .ToArrayAsync();
         }
 
         // AuctionItem
-        public Task<AuctionItem[]> GetAllAuctionItemAsync()
+        public async Task<AuctionItem[]> GetAllAuctionItemAsync()
         {
-            throw new NotImplementedException();
+            return await _context.AuctionItems.ToArrayAsync();
         }
 
-        public Task<AuctionItem[]> GetAllAuctionItemByAuctionAsync(int auctionId)
+        public async Task<AuctionItem[]> GetAllAuctionItemByAuctionAsync(int auctionId)
         {
-            throw new NotImplementedException();
+            return await _context.AuctionItems
+                .Where(ai => ai.Id == auctionId)
+                .ToArrayAsync();
         }
 
-        public Task<AuctionItem[]> GetAllAuctionItemByComitenteAsync(int comitenteId)
+        public async Task<AuctionItem[]> GetAllAuctionItemByComitenteAsync(int comitenteId)
         {
-            throw new NotImplementedException();
+            return await _context.AuctionItems
+                .Where(ai => ai.ComitenteId == comitenteId)
+                .ToArrayAsync();
         }
 
-        public Task<AuctionItem> GetAllAuctionItemByIdAsync(int id)
+        public async Task<AuctionItem> GetAuctionItemByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.AuctionItems.FirstOrDefaultAsync(ai => ai.Id == id);
         }
-
         
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        public Task<Auction> GetAuctionByIdAsync(int id)
+        public async Task<AuctionItem[]> GetAllAuctionItemByItemAsync(int itemId)
         {
-            throw new NotImplementedException();
+            return await _context.AuctionItems
+                .Where(ai => ai.ItemId == itemId)
+                .ToArrayAsync();
         }
-
-        public Task<Auction[]> GetAuctionByNegotiationAsync(Negotiation negotiation)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-        public Task<AuctionItem[]> GetAllAuctionItemByItemAsync(int itemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-
-        
-
-        
     }
 }

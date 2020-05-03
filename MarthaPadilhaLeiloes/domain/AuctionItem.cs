@@ -8,13 +8,13 @@ namespace domain
         public double PriceNegotiated { get; set; }
         
         public int AuctionId { get; set; }
-        public Auction Auction { get; set; }
+        public Auction Auction { get; }
 
         public int ItemId { get; set; }
-        public Item Item { get; set; }
+        public Item Item { get; }
 
         public int ComitenteId { get; set; }
-        public Comitente Comitente { get; set; }
+        public Comitente Comitente { get; }
 
 
         public AuctionItem(){}

@@ -8,7 +8,7 @@ namespace domain
         public double PriceReference { get; set; }
         public string Local { get; set; }
         public int TipoItemId { get; set; }
-        public TipoItem TipoItem { get; set; }
+        public TipoItem TipoItem { get; }
 
         public Item(){}
 

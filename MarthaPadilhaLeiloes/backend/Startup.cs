@@ -28,6 +28,7 @@ namespace MarthaPadilhaLeiloes
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MarthaPadilhaLeiloesContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IRepository, Repository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
         }
