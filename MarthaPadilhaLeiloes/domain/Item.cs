@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace domain
 {
     public class Item
@@ -9,6 +11,7 @@ namespace domain
         public string Local { get; set; }
         public int TipoItemId { get; set; }
         public TipoItem TipoItem { get; }
+        public List<AuctionItem> AuctionItems { get; set; }
 
         public Item(){}
 

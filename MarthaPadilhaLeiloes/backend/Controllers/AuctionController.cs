@@ -117,7 +117,7 @@ namespace backend.Controllers
         {
             try
             {
-                var auction = await _repo.GetItemByIdAsync(auctionId);
+                var auction = await _repo.GetAuctionByIdAsync(auctionId);
                 if(auction == null) return NotFound();
                 
                 _repo.Update(model);
@@ -140,7 +140,7 @@ namespace backend.Controllers
         {
             try
             {
-                var auction = await _repo.GetItemByIdAsync(auctionId);
+                var auction = await _repo.GetAuctionByIdAsync(auctionId);
                 if(auction == null) return NotFound();
                 
                 _repo.Delete(auction);

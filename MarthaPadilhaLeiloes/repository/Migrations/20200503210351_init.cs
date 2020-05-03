@@ -36,19 +36,6 @@ namespace repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TipoItems",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipoItems", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -63,12 +50,19 @@ namespace repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Items_TipoItems_TipoItemId",
-                        column: x => x.TipoItemId,
-                        principalTable: "TipoItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TipoItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,12 +87,6 @@ namespace repository.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AuctionItems_Comitentes_ComitenteId",
-                        column: x => x.ComitenteId,
-                        principalTable: "Comitentes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_AuctionItems_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
@@ -112,19 +100,9 @@ namespace repository.Migrations
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuctionItems_ComitenteId",
-                table: "AuctionItems",
-                column: "ComitenteId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AuctionItems_ItemId",
                 table: "AuctionItems",
                 column: "ItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Items_TipoItemId",
-                table: "Items",
-                column: "TipoItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -133,16 +111,16 @@ namespace repository.Migrations
                 name: "AuctionItems");
 
             migrationBuilder.DropTable(
-                name: "Auctions");
-
-            migrationBuilder.DropTable(
                 name: "Comitentes");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "TipoItems");
 
             migrationBuilder.DropTable(
-                name: "TipoItems");
+                name: "Auctions");
+
+            migrationBuilder.DropTable(
+                name: "Items");
         }
     }
 }

@@ -84,7 +84,7 @@ namespace backend.Controllers
                 
                 _repo.Update(model);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/auction/{model.Id}", model);
+                    return Created($"api/auctionitem/{model.Id}", model);
                 }
             }
             catch (System.Exception)

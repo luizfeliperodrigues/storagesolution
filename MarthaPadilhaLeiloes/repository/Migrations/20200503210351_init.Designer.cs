@@ -9,7 +9,7 @@ using repository;
 namespace repository.Migrations
 {
     [DbContext(typeof(MarthaPadilhaLeiloesContext))]
-    [Migration("20200502214653_init")]
+    [Migration("20200503210351_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,8 +53,6 @@ namespace repository.Migrations
 
                     b.HasIndex("AuctionId");
 
-                    b.HasIndex("ComitenteId");
-
                     b.HasIndex("ItemId");
 
                     b.ToTable("AuctionItems");
@@ -89,8 +87,6 @@ namespace repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TipoItemId");
-
                     b.ToTable("Items");
                 });
 
@@ -108,27 +104,14 @@ namespace repository.Migrations
 
             modelBuilder.Entity("domain.AuctionItem", b =>
                 {
-                    b.HasOne("domain.Auction", "Auction")
+                    b.HasOne("domain.Auction")
                         .WithMany("AuctionItems")
                         .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("domain.Comitente", "Comitente")
-                        .WithMany()
-                        .HasForeignKey("ComitenteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("domain.Item", "Item")
-                        .WithMany()
+                    b.HasOne("domain.Item")
+                        .WithMany("AuctionItems")
                         .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("domain.Item", b =>
-                {
-                    b.HasOne("domain.TipoItem", "TipoItem")
-                        .WithMany()
-                        .HasForeignKey("TipoItemId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
