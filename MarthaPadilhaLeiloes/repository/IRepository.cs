@@ -39,7 +39,6 @@ namespace repository
          Task<AuctionItem> GetAuctionItemByIdAsync(int id);
          Task<AuctionItem[]> GetAllAuctionItemByAuctionAsync(int auctionId);
          Task<AuctionItem[]> GetAllAuctionItemByItemAsync(int itemId);
-         Task<AuctionItem[]> GetAllAuctionItemByComitenteAsync(int comitenteId);
          
     }
 }

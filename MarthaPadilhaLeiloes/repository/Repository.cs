@@ -147,13 +147,6 @@ namespace repository
                 .ToArrayAsync();
         }
 
-        public async Task<AuctionItem[]> GetAllAuctionItemByComitenteAsync(int comitenteId)
-        {
-            return await _context.AuctionItems
-                .Where(ai => ai.ComitenteId == comitenteId)
-                .ToArrayAsync();
-        }
-
         public async Task<AuctionItem> GetAuctionItemByIdAsync(int id)
         {
             return await _context.AuctionItems.FirstOrDefaultAsync(ai => ai.Id == id);
