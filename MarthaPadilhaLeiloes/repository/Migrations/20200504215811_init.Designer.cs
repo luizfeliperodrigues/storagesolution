@@ -9,7 +9,7 @@ using repository;
 namespace repository.Migrations
 {
     [DbContext(typeof(MarthaPadilhaLeiloesContext))]
-    [Migration("20200504210703_init")]
+    [Migration("20200504215811_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
