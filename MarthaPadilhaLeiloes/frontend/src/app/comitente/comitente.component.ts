@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ComitenteService } from '../_services/comitente.service';
+import { Comitente } from '../_models/Comitente';
 
 @Component({
   selector: 'app-comitente',
@@ -8,35 +9,36 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ComitenteComponent implements OnInit {
 
-  _filtroLista: string;
+  filtrolista: string;
   get filtroLista(): string{
-    return this._filtroLista;
+    return this.filtrolista;
   }
   set filtroLista(value: string){
-    this._filtroLista = value;
+    this.filtrolista = value;
     this.comitentesFiltrados = this.filtroLista ? this.filtrarComitentes(this.filtroLista) : this.comitentes;
   }
 
-  comitentesFiltrados: any = [];
-  comitentes: any = [];
+  comitentesFiltrados: Comitente[];
+  comitentes: Comitente[];
 
-  constructor(private http: HttpClient) { }
+  constructor(private comitenteService: ComitenteService) { }
 
   ngOnInit() {
     this.getComitentes();
   }
 
-  filtrarComitentes(filtrarPor: string): any {
+  filtrarComitentes(filtrarPor: string): Comitente[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.comitentes.filter(
-      c => c.comitenteName.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+      c => c.name.toLocaleLowerCase().indexOf(filtrarPor) !== -1
     );
   }
 
   getComitentes(){
-    this.http.get('http://localhost:5000/api/values').subscribe(response => {
-      this.comitentes = response;
-      console.log(response);
+    this.comitenteService.getAllComitente().subscribe(
+      (_comitentes: Comitente[]) => {
+      this.comitentes = _comitentes;
+      console.log(_comitentes);
       }, error => {
         console.log(error);
     });

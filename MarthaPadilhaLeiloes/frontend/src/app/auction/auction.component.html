@@ -1,5 +1,5 @@
 <h3>
-  <strong>Comitentes</strong>
+  <strong>Leiloes</strong>
 </h3>
 
 <div class="form-inline">
@@ -14,24 +14,26 @@
 
 <br>
 
-<h4 *ngIf="comitentesFiltrados.length">Filtrando por {{filtroLista}}</h4>
-
 <table class="table table-stripped">
   <thead class="thead-dark">
     <tr>
       <th>#</th>
-      <th>Nome</th>
+      <th>Codigo</th>
+      <th>Data</th>
+      <th>Itens</th>
     </tr>
   </thead>
   
-  <tbody *ngIf="comitentes && comitentes.length">
-    <tr *ngFor="let comitente of comitentesFiltrados">
-      <td>{{comitente.id}}</td>
-      <td>{{comitente.name}}</td>
+  <tbody *ngIf="auctions && auctions.length">
+    <tr *ngFor="let auction of auctions">
+      <td>{{auction.id}}</td>
+      <td>{{auction.businessCode}}</td>
+      <td>{{auction.date}}</td>
+      <td>{{auction.auctionItems}}</td>
     </tr>
   </tbody>
 
-  <tfoot *ngIf="!comitentes.length">
+  <tfoot *ngIf="!auctions.length">
     <tr>
       <td colspan="7" class="text-centered">
         <h4>Nenhum comitente encontrado!</h4>

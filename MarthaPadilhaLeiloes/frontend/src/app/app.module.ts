@@ -7,13 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComitenteComponent } from './comitente/comitente.component';
 import { NavComponent } from './nav/nav.component';
+import { AuctionComponent } from './auction/auction.component';
 
 @NgModule({
    declarations: [
       AppComponent,
       ComitenteComponent,
       ComitenteComponent,
-      NavComponent
+      NavComponent,
+      AuctionComponent
    ],
    imports: [
       BrowserModule,

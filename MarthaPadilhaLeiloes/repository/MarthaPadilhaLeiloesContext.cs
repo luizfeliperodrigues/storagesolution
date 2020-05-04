@@ -14,9 +14,9 @@ namespace repository
         public DbSet<TipoItem> TipoItems { get; set; }
 
         // Para especificar uma relação n:n
-        // protected override void OnModelCreating(ModelBuilder modelBuilder){
-        //     modelBuilder.Entity<AuctionItem>()
-        //         .HasKey(PE => new { PE.Auction, PE.Item });
-        // }
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.Entity<AuctionItem>()
+                .HasKey(PE => new { PE.Auction, PE.Item });
+        }
     }
 }

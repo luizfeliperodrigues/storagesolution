@@ -9,7 +9,7 @@ namespace domain
         public int BusinessCode { get; set; }
         public Negotiation Negotiation { get; set; }
         public DateTime Date { get; set; }
-        public List<AuctionItem> AuctionItems { get; private set; } // Tirado o set para nao dar erro no BD
+        public List<AuctionItem> AuctionItems { get; set; }
 
         public Auction(){}
 
