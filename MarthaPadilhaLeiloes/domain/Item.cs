@@ -12,7 +12,7 @@ namespace domain
         public double PriceReference { get; set; }
         public string Local { get; set; }
         public int TipoItemId { get; set; }
-        public TipoItem TipoItem { get; }
+        public TipoItem TipoItem { get; set; }
         public int ComitenteId { get; set; }
         public Comitente Comitente { get; set; }
         public List<AuctionItem> AuctionItems { get; set; }
