@@ -19,6 +19,7 @@
     <tr>
       <th>#</th>
       <th>Codigo</th>
+      <th>Compra/Venda</th>
       <th>Data</th>
       <th>Itens</th>
     </tr>
@@ -28,8 +29,9 @@
     <tr *ngFor="let auction of auctions">
       <td>{{auction.id}}</td>
       <td>{{auction.businessCode}}</td>
+      <td>{{auction.negotiation}}</td>
       <td>{{auction.date}}</td>
-      <td>{{auction.auctionItems}}</td>
+      <td>{{auction.auctionItems | json}}</td>
     </tr>
   </tbody>
 
