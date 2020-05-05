@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AuctionService } from '../_services/auction.service';
 import { Auction } from '../_models/Auction';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-auction',
@@ -8,8 +9,18 @@ import { Auction } from '../_models/Auction';
   styleUrls: ['./auction.component.css']
 })
 export class AuctionComponent implements OnInit {
+  auctionsFiltrados: Auction[];
+  auctions: Auction[];
+  filtro: string;
+  modalRef: BsModalRef;
 
   filtrolista: number;
+
+  constructor(
+      private auctionService: AuctionService
+    , private modalService: BsModalService
+  ) { }
+
   get filtroLista(): number{
     return this.filtrolista;
   }
@@ -18,11 +29,9 @@ export class AuctionComponent implements OnInit {
     this.auctionsFiltrados = this.filtroLista ? this.filtrarAuctions(this.filtroLista) : this.auctions;
   }
 
-  auctionsFiltrados: Auction[];
-  auctions: Auction[];
-  filtro: string;
-
-  constructor(private auctionService: AuctionService) { }
+  openModal(template: TemplateRef<any>){
+    this.modalRef = this.modalService.show(template);
+  }
 
   ngOnInit() {
     this.getAuctions();

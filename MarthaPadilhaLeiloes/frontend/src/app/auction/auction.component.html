@@ -5,10 +5,10 @@
 <div class="form-inline">
   <div class="form-group nb-2">
     <label class="mr-2"><strong>Filtro:</strong></label> <input type="text" 
-      class="form-control mr-2" 
-      placeholder="buscar"
-      [(ngModel)]="filtroLista"
-      >
+    class="form-control mr-2" 
+    placeholder="buscar"
+    [(ngModel)]="filtroLista"
+    >
   </div>
 </div>
 
@@ -22,6 +22,7 @@
       <th>Compra/Venda</th>
       <th>Data</th>
       <th>Itens</th>
+      <th>Opções</th>
     </tr>
   </thead>
   
@@ -30,11 +31,23 @@
       <td>{{auction.id}}</td>
       <td>{{auction.businessCode}}</td>
       <td>{{auction.negotiation}}</td>
-      <td>{{auction.date}}</td>
-      <td>{{auction.auctionItems | json}}</td>
+      <td>{{auction.date | DateTimeFormatPipe }}</td>
+      <td><a href="">Ver itens</a></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-success" 
+          tooltip="Editar" (click)="openModal(editar)">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" 
+          tooltip="Excluir" (click)="openModal(excluir)">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
+      </td>
     </tr>
   </tbody>
-
+  
   <tfoot *ngIf="!auctions.length">
     <tr>
       <td colspan="7" class="text-centered">
@@ -43,3 +56,29 @@
     </tr>
   </tfoot>
 </table>
+
+<ng-template #editar>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Editar</h4>
+    <button type="button" class="close pull-right" 
+    aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  Tem certeza que deseja editar?
+</div>
+</ng-template>
+
+<ng-template #excluir>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Excluir</h4>
+    <button type="button" class="close pull-right" 
+    aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  Tem certeza que deseja excluir?
+</div>
+</ng-template>
