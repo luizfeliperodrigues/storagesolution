@@ -19,4 +19,16 @@ getAuctionById(id: number): Observable<Auction>{
   return this.http.get<Auction>(`${this.baseURL}/${id}`);
 }
 
+postAuction(auction: Auction) {
+  return this.http.post(this.baseURL, auction);
+}
+
+putAuction(auction: Auction) {
+  return this.http.put(`${this.baseURL}/${auction.id}`, auction);
+}
+
+deleteAuction(id: number) {
+  return this.http.delete(`${this.baseURL}/${id}`);
+}
+
 }

@@ -2,14 +2,21 @@
   <strong>Leiloes</strong>
 </h3>
 
-<div class="form-inline">
-  <div class="form-group nb-2">
-    <label class="mr-2"><strong>Filtro:</strong></label> <input type="text" 
-    class="form-control mr-2" 
-    placeholder="buscar"
-    [(ngModel)]="filtroLista"
-    >
+<div class="d-flex">
+  <div class="form-inline mr-auto">
+    <div class="form-group nb-2">
+      <label class="mr-2"><strong>Filtro:</strong></label> <input type="text" 
+      class="form-control mr-2" 
+      placeholder="buscar"
+      [(ngModel)]="filtroLista"
+      >
+    </div>
   </div>
+  
+  <button class="btn btn-outline-primary" (click)="newAuction(CreateOrEdit)">
+    <i class="fa fa-plus-circle"></i>&nbsp;
+    Criar Leilão
+  </button>
 </div>
 
 <br>
@@ -36,18 +43,18 @@
       <td>
         <div class="btn-group">
           <button class="btn btn-sm btn-success" 
-          tooltip="Editar" (click)="openModal(editar)">
+          tooltip="Editar" (click)="editAuction(auction, CreateOrEdit)">
             <i class="fa fa-edit"></i>
           </button>
           <button class="btn btn-sm btn-danger" 
-          tooltip="Excluir" (click)="openModal(excluir)">
+          tooltip="Excluir" (click)="excludeAuction(auction, confirm)">
             <i class="fa fa-eraser"></i>
           </button>
         </div>
       </td>
     </tr>
   </tbody>
-  
+
   <tfoot *ngIf="!auctions.length">
     <tr>
       <td colspan="7" class="text-centered">
@@ -57,28 +64,105 @@
   </tfoot>
 </table>
 
-<ng-template #editar>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Editar</h4>
-    <button type="button" class="close pull-right" 
-    aria-label="Close" (click)="modalRef.hide()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<div bsModal #CreateOrEdit="bs-modal" class="modal fade" tabindex="-1"
+role="dialog" aria-labelledby="dialog-sizes-name1">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">Criar Leilão</h4>
+      <button type="button" class="close pull-right" (click)="CreateOrEdit.hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="registerForm">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Código</label>
+            
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': registerForm.get('businessCode').errors && registerForm.get('businessCode').touched}"
+            formControlName="businessCode" placeholder="Codigo">
+            
+            <div *ngIf="registerForm.get('businessCode').hasError('required') && registerForm.get('businessCode').touched" class="invalid-feedback">
+              O campo é obrigatório.
+            </div>
+            
+            <div *ngIf="registerForm.get('businessCode').hasError('pattern') && registerForm.get('businessCode').touched" class="invalid-feedback">
+              O código é somente composto por numeros.
+            </div>
+          </div>
+          
+          <div class="form-group col-md-4">
+            <label>Compra = 0 e Venda = 1</label>
+            
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': registerForm.get('negotiation').errors && registerForm.get('negotiation').touched}"
+            formControlName="negotiation" placeholder="Compra ou Venda?">
+            
+            <div *ngIf="registerForm.get('negotiation').hasError('required') && registerForm.get('businessCode').touched" class="invalid-feedback">
+              O campo é obrigatório.
+            </div>
+            
+            <div *ngIf="registerForm.get('negotiation').hasError('pattern') && registerForm.get('businessCode').touched" class="invalid-feedback">
+              Digitar 0 para 'Compra' ou 1 para 'Venda'.
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Data</label>
+            <input type="text" class="form-control" 
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat : 'DD/MM/YYYY' }"
+            [ngClass]="{'is-invalid': registerForm.get('date').errors && registerForm.get('date').touched}"
+            formControlName="date" placeholder="dd/mm/aaaa">
+            
+            <div *ngIf="registerForm.get('date').hasError('required') && registerForm.get('businessCode').touched" class="invalid-feedback">
+              O campo é obrigatório.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <div class="modal-footer d-flex">
+      <button class="btn btn-secondary" (click)="CreateOrEdit.hide()">
+        Fechar
+      </button>
+      
+      <button class="btn btn-primary ml-auto" [disabled]="!registerForm.valid" (click)="saveAuction(CreateOrEdit)">
+        Salvar
+      </button>
+    </div>
+  </div>
 </div>
-<div class="modal-body">
-  Tem certeza que deseja editar?
 </div>
-</ng-template>
 
-<ng-template #excluir>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Excluir</h4>
-    <button type="button" class="close pull-right" 
-    aria-label="Close" (click)="modalRef.hide()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<div bsModal #confirm="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+	<div class="modal-dialog modal-sm">
+  		<div class="modal-content">
+    		<div class="modal-header">
+      			<h4 class="modal-title pull-left">
+        			Deletando Evento
+      			</h4>
+      			<button type="button" class="close pull-right" (click)="confirm.hide()" aria-label="Close">
+        			<span aria-hidden="true">&times;</span>
+      			</button>
+    		</div>
+    		<div class="modal-body">
+      			<p>{{bodyDeleteAuction}}</p>
+    		</div>    
+    		<div class="modal-footer btn-group d-flex">      
+      			<button type="button" class="btn btn-outline-primary" (click)="confirm.hide()">
+        			CANCELAR
+      			</button>
+      			<button type="button" class="btn btn-outline-danger" (click)="confirmDelete(confirm)">
+          		DELETAR
+        		</button>
+    		</div>
+  		</div>
+	</div>
 </div>
-<div class="modal-body">
-  Tem certeza que deseja excluir?
-</div>
-</ng-template>
+
