@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using backend.DTOs;
 using domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +14,12 @@ namespace backend.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IRepository _repo;
+        private readonly IMapper _mapper;
 
-        public ItemController(IRepository repo)
+        public ItemController(IRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -22,12 +27,12 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllItemAsync();
+                var items = await _repo.GetAllItemAsync();
+                var results = _mapper.Map<IEnumerable<ItemDTO>>(items);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -39,20 +44,11 @@ namespace backend.Controllers
             try
             {
                 var itemById = await _repo.GetItemByIdAsync(itemId);
-                var itemByBusinessCode = await _repo.GetItemByBusinessCodeAsync(itemId);
-                if(itemById == null)
-                {
-                    return Ok(itemByBusinessCode);
-                }
-                else
-                {
-                    return Ok(itemById);
-                }
-                
+                var results = _mapper.Map<ItemDTO>(itemById);
+                return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -63,12 +59,12 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllItemByLocalAsync(local);
+                var itemsByLocal = await _repo.GetAllItemByLocalAsync(local);
+                var results = _mapper.Map<IEnumerable<ItemDTO>>(itemsByLocal);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -79,30 +75,30 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllItemByTypeAsync(tipoItem);
+                var itemsByTipo = await _repo.GetAllItemByTypeAsync(tipoItem);
+                var results = _mapper.Map<IEnumerable<ItemDTO>>(itemsByTipo);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Item model)
+        public async Task<ActionResult> Post(ItemDTO model)
         {
             try
             {
-                _repo.Add(model);
+                var item = _mapper.Map<Item>(model);
+                _repo.Add(item);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/item/{model.Id}", model);
+                    return Created($"api/item/{item.Id}", _mapper.Map<ItemDTO>(item));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -111,21 +107,22 @@ namespace backend.Controllers
         }
 
         [HttpPut("{ItemId}")]
-        public async Task<ActionResult> Put(int itemId, Item model)
+        public async Task<ActionResult> Put(int itemId, ItemDTO model)
         {
             try
             {
                 var item = await _repo.GetItemByIdAsync(itemId);
                 if(item == null) return NotFound();
+
+                _mapper.Map(item, model);
                 
-                _repo.Update(model);
+                _repo.Update(item);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/item/{model.Id}", model);
+                    return Created($"api/item/{item.Id}", _mapper.Map<ItemDTO>(item));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -148,7 +145,6 @@ namespace backend.Controllers
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 

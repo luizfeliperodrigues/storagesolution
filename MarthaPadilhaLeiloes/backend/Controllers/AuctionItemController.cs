@@ -32,21 +32,14 @@ namespace backend.Controllers
             }
         }
 
-         [HttpGet("{auctionItemId}")]
+        [HttpGet("{auctionItemId}")]
         public async Task<ActionResult> Get(int auctionItemId)
         {
             try
             {
                 var auctionItemById = await _repo.GetAuctionItemByIdAsync(auctionItemId);
-                var auctionItemByAuction = await _repo.GetAllAuctionItemByAuctionAsync(auctionItemId);
-                if(auctionItemById == null)
-                {
-                    return Ok(auctionItemByAuction);
-                }
-                else
-                {
-                    return Ok(auctionItemById);
-                }
+                
+                return Ok(auctionItemById);
             }
             catch (System.Exception)
             {

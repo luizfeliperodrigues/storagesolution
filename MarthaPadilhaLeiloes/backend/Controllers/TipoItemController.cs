@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using backend.DTOs;
 using domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +14,12 @@ namespace backend.Controllers
     public class TipoItemController : ControllerBase
     {
         private readonly IRepository _repo;
+        private readonly IMapper _mapper;
 
-        public TipoItemController(IRepository repo)
+        public TipoItemController(IRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -22,12 +27,12 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllTipoItemAsync();
+                var tipoItem = await _repo.GetAllTipoItemAsync();
+                var results = _mapper.Map<IEnumerable<TipoItemDTO>>(tipoItem);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -38,30 +43,30 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetTipoItemByIdAsync(TipoItemId);
+                var tipoItem = await _repo.GetTipoItemByIdAsync(TipoItemId);
+                var results = _mapper.Map<TipoItemDTO>(tipoItem);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(TipoItem model)
+        public async Task<ActionResult> Post(TipoItemDTO model)
         {
             try
             {
-                _repo.Add(model);
+                var tipoItem = _mapper.Map<TipoItem>(model);
+                _repo.Add(tipoItem);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/tipoitem/{model.Id}", model);
+                    return Created($"api/tipoitem/{tipoItem.Id}", _mapper.Map<TipoItemDTO>(tipoItem));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -70,21 +75,22 @@ namespace backend.Controllers
         }
 
         [HttpPut("{TipoItemId}")]
-        public async Task<ActionResult> Put(int tipoItemId, TipoItem model)
+        public async Task<ActionResult> Put(int tipoItemId, TipoItemDTO model)
         {
             try
             {
                 var tipoItem = await _repo.GetTipoItemByIdAsync(tipoItemId);
                 if(tipoItem == null) return NotFound();
+
+                _mapper.Map(tipoItem, model);
                 
-                _repo.Update(model);
+                _repo.Update(tipoItem);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/tipoitem/{model.Id}", model);
+                    return Created($"api/tipoitem/{tipoItem.Id}", _mapper.Map<TipoItemDTO>(tipoItem));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -107,7 +113,6 @@ namespace backend.Controllers
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 

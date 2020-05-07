@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using backend.DTOs;
 using domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +16,12 @@ namespace backend.Controllers
     public class AuctionController : ControllerBase
     {
         private readonly IRepository _repo;
+        private readonly IMapper _mapper;
 
-        public AuctionController(IRepository repo)
+        public AuctionController(IRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -23,7 +29,11 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllAuctionByAsync();
+                var auctions = await _repo.GetAllAuctionByAsync();
+
+                var results = _mapper.Map<IEnumerable<AuctionDTO>>(auctions);
+                
+                // return Ok(auctions);
                 return Ok(results);
             }
             catch (System.Exception)
@@ -39,15 +49,10 @@ namespace backend.Controllers
             try
             {
                 var auctionById = await _repo.GetAuctionByIdAsync(auctionId);
-                var auctionByBusinessCode = await _repo.GetAuctionByBusinessCodeAsync(auctionId);
-                if(auctionById == null)
-                {
-                    return Ok(auctionByBusinessCode);
-                }
-                else
-                {
-                    return Ok(auctionById);
-                }
+
+                var result = _mapper.Map<AuctionDTO>(auctionById);
+
+                return Ok(result);
             }
             catch (System.Exception)
             {
@@ -61,7 +66,10 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllAuctionByNegotiationAsync(negotiation);
+                var auctions = await _repo.GetAllAuctionByNegotiationAsync(negotiation);
+
+                var results = _mapper.Map<IEnumerable<AuctionDTO>>(auctions);
+                
                 return Ok(results);
             }
             catch (System.Exception)
@@ -76,12 +84,14 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllAuctionByDateAsync(initialDate, null);
+                var auctions = await _repo.GetAllAuctionByDateAsync(initialDate, null);
 
                 if(finalDate != null)
                 {
-                    results = await _repo.GetAllAuctionByDateAsync(initialDate, finalDate);
+                    auctions = await _repo.GetAllAuctionByDateAsync(initialDate, finalDate);
                 }
+
+                var results = _mapper.Map<IEnumerable<AuctionDTO>>(auctions);
                 
                 return Ok(results);
             }
@@ -94,13 +104,16 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Auction model)
+        public async Task<ActionResult> Post(AuctionDTO model)
         {
             try
             {
-                _repo.Add(model);
+                var auction = _mapper.Map<Auction>(model);
+
+                _repo.Add(auction);
+
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/auction/{model.Id}", model);
+                    return Created($"api/auction/{auction.Id}", _mapper.Map<AuctionDTO>(auction));
                 }
             }
             catch (System.Exception)
@@ -113,16 +126,18 @@ namespace backend.Controllers
         }
 
         [HttpPut("{auctionId}")]
-        public async Task<ActionResult> Put(int auctionId, Auction model)
+        public async Task<ActionResult> Put(int auctionId, AuctionDTO model)
         {
             try
             {
                 var auction = await _repo.GetAuctionByIdAsync(auctionId);
                 if(auction == null) return NotFound();
+
+                _mapper.Map(auction, model);
                 
-                _repo.Update(model);
+                _repo.Update(auction);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/auction/{model.Id}", model);
+                    return Created($"api/auction/{auction.Id}", _mapper.Map<AuctionDTO>(auction));
                 }
             }
             catch (System.Exception)

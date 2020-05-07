@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using backend.DTOs;
 using domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +14,12 @@ namespace backend.Controllers
     public class ComitenteController : ControllerBase
     {
         private readonly IRepository _repo;
+        private readonly IMapper _mapper;
 
-        public ComitenteController(IRepository repo)
+        public ComitenteController(IRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -22,7 +27,8 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetAllComitenteAsync();
+                var comitentes = await _repo.GetAllComitenteAsync();
+                var results = _mapper.Map<IEnumerable<ComitenteDTO>>(comitentes);
                 return Ok(results);
             }
             catch (System.Exception)
@@ -38,30 +44,30 @@ namespace backend.Controllers
         {
             try
             {
-                var results = await _repo.GetComitenteByIdAsync(ComitenteId);
+                var comitente = await _repo.GetComitenteByIdAsync(ComitenteId);
+                var results = _mapper.Map<ComitenteDTO>(comitente);
                 return Ok(results);
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Comitente model)
+        public async Task<ActionResult> Post(ComitenteDTO model)
         {
             try
             {
-                _repo.Add(model);
+                var comitente = _mapper.Map<Comitente>(model);
+                _repo.Add(comitente);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/comitente/{model.Id}", model);
+                    return Created($"api/comitente/{comitente.Id}", _mapper.Map<ComitenteDTO>(comitente));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -70,21 +76,22 @@ namespace backend.Controllers
         }
 
         [HttpPut("{ComitenteId}")]
-        public async Task<ActionResult> Put(int comitenteId, Comitente model)
+        public async Task<ActionResult> Put(int comitenteId, ComitenteDTO model)
         {
             try
             {
                 var comitente = await _repo.GetComitenteByIdAsync(comitenteId);
                 if(comitente == null) return NotFound();
 
-                _repo.Update(model);
+                _mapper.Map(comitente, model);
+
+                _repo.Update(comitente);
                 if(await _repo.SaveChangesAsync()){
-                    return Created($"api/comitente/{model.Id}", model);
+                    return Created($"api/comitente/{comitente.Id}", _mapper.Map<ComitenteDTO>(comitente));
                 }
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
@@ -107,7 +114,6 @@ namespace backend.Controllers
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
