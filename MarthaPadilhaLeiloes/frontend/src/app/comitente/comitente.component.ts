@@ -8,7 +8,7 @@ import { Comitente } from '../_models/Comitente';
   styleUrls: ['./comitente.component.css']
 })
 export class ComitenteComponent implements OnInit {
-
+  title = 'Comitentes';
   filtrolista: string;
   get filtroLista(): string{
     return this.filtrolista;

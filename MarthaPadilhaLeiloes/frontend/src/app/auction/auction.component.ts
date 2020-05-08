@@ -3,6 +3,7 @@ import { AuctionService } from '../_services/auction.service';
 import { Auction } from '../_models/Auction';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
@@ -14,6 +15,7 @@ defineLocale('pt-br', ptBrLocale);
   styleUrls: ['./auction.component.css']
 })
 export class AuctionComponent implements OnInit {
+  title = 'Leilões';
   auctionsFiltrados: Auction[];
   auctions: Auction[];
   auction: Auction;
@@ -30,6 +32,7 @@ export class AuctionComponent implements OnInit {
     // , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
+    , private toastr: ToastrService
   ) {
     this.localeService.use('pt-br')
    }
@@ -53,7 +56,9 @@ export class AuctionComponent implements OnInit {
       () => {
           template.hide();
           this.getAuctions();
+          this.toastr.success('Deletado com sucesso!');
         }, error => {
+          this.toastr.error('Erro ao tentar deletar.');
           console.log(error);
         }
     );
@@ -95,7 +100,7 @@ export class AuctionComponent implements OnInit {
       this.auctions = _auctions;
       // console.log(_auctions);
       }, error => {
-        console.log(error);
+        this.toastr.error(`Erro ao tentar carregar os leilões: ${error}`);
     });
   }
 
@@ -118,8 +123,9 @@ export class AuctionComponent implements OnInit {
           () => {
             template.hide();
             this.getAuctions();
+            this.toastr.success('Leilão criado com sucesso!');
           }, error => {
-            console.log(error);
+            this.toastr.error(`Erro ao criar o leilão: ${error}`);
           }
         );
       }
@@ -130,8 +136,9 @@ export class AuctionComponent implements OnInit {
           () => {
             template.hide();
             this.getAuctions();
+            this.toastr.success('Leilão editado com sucesso!');
           }, error => {
-            console.log(error);
+            this.toastr.error(`Erro ao editar o leilão: ${error}`);
           }
         );
       }

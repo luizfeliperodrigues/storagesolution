@@ -1,4 +1,5 @@
 import { AuctionItem } from './AuctionItem';
+import { Auction } from './Auction';
 
 export interface Item {
     id: number;
@@ -7,5 +8,5 @@ export interface Item {
     priceReference: number;
     local: string;
     tipoItemId: number;
-    auctionItems: AuctionItem[];
+    auctions: Auction[];
 }

@@ -83,7 +83,7 @@ namespace backend.Controllers
                 var comitente = await _repo.GetComitenteByIdAsync(comitenteId);
                 if(comitente == null) return NotFound();
 
-                _mapper.Map(comitente, model);
+                _mapper.Map(model, comitente);
 
                 _repo.Update(comitente);
                 if(await _repo.SaveChangesAsync()){

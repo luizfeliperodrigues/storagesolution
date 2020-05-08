@@ -8,24 +8,34 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AppRoutingModule } from './app-routing.module';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AuctionService } from './_services/auction.service';
 import { ComitenteService } from './_services/comitente.service';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { ComitenteComponent } from './comitente/comitente.component';
 import { AuctionComponent } from './auction/auction.component';
+import { ItemComponent } from './item/item.component';
+import { ContatoComponent } from './contato/contato.component';
+import { TituloComponent } from './_shared/titulo/titulo.component';
 
 import { DateTimeFormatPipePipe } from './_helper/DateTimeFormatPipe.pipe';
 
 @NgModule({
    declarations: [
       AppComponent,
-      ComitenteComponent,
       NavComponent,
+      DashboardComponent,
+      ComitenteComponent,
       AuctionComponent,
-      DateTimeFormatPipePipe
+      ItemComponent,
+      ContatoComponent,
+      TituloComponent,
+      DateTimeFormatPipePipe,
+      ContatoComponent
    ],
    imports: [
       BrowserModule,
@@ -37,6 +47,7 @@ import { DateTimeFormatPipePipe } from './_helper/DateTimeFormatPipe.pipe';
       HttpClientModule,
       FormsModule,
       BrowserAnimationsModule,
+      ToastrModule.forRoot(),
       ReactiveFormsModule
    ],
    providers: [

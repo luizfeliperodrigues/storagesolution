@@ -1,6 +1,4 @@
-<h3>
-  <strong>Leiloes</strong>
-</h3>
+<app-titulo [title]='title'></app-titulo>
 
 <div class="d-flex">
   <div class="form-inline mr-auto">
@@ -38,8 +36,15 @@
       <td>{{auction.id}}</td>
       <td>{{auction.businessCode}}</td>
       <td>{{auction.negotiation}}</td>
-      <td>{{auction.date | DateTimeFormatPipe }}</td>
-      <td><a href="#">Ver itens</a></td>
+      <td>{{auction.date | DateTimeFormatPipe}}</td>
+      <td>
+        <div *ngIf="auction.items.length === 0">
+          Sem itens inseridos.
+        </div>
+        <div *ngIf="auction.items.length > 0">
+          Contem {{auction.items.length}} item(ns).
+        </div>
+      </td>
       <td>
         <div class="btn-group">
           <button class="btn btn-sm btn-success" 
@@ -55,10 +60,10 @@
     </tr>
   </tbody>
 
-  <tfoot *ngIf="!auctions.length">
+  <tfoot *ngIf="!auctions">
     <tr>
       <td colspan="7" class="text-centered">
-        <h4>Nenhum comitente encontrado!</h4>
+        <h4>Nenhum leilão encontrado!</h4>
       </td>
     </tr>
   </tfoot>
@@ -166,3 +171,5 @@ role="dialog" aria-labelledby="dialog-sizes-name1">
 	</div>
 </div>
 
+ <!-- value="{{date | DateTimeFormatPipe}}"
+            [(ngModel)]="date" -->

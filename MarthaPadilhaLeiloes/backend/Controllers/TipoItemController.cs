@@ -82,7 +82,7 @@ namespace backend.Controllers
                 var tipoItem = await _repo.GetTipoItemByIdAsync(tipoItemId);
                 if(tipoItem == null) return NotFound();
 
-                _mapper.Map(tipoItem, model);
+                _mapper.Map(model, tipoItem);
                 
                 _repo.Update(tipoItem);
                 if(await _repo.SaveChangesAsync()){

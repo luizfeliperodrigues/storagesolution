@@ -114,7 +114,7 @@ namespace backend.Controllers
                 var item = await _repo.GetItemByIdAsync(itemId);
                 if(item == null) return NotFound();
 
-                _mapper.Map(item, model);
+                _mapper.Map(model, item);
                 
                 _repo.Update(item);
                 if(await _repo.SaveChangesAsync()){

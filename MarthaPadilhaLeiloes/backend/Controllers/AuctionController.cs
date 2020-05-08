@@ -133,7 +133,7 @@ namespace backend.Controllers
                 var auction = await _repo.GetAuctionByIdAsync(auctionId);
                 if(auction == null) return NotFound();
 
-                _mapper.Map(auction, model);
+                _mapper.Map(model, auction);
                 
                 _repo.Update(auction);
                 if(await _repo.SaveChangesAsync()){
@@ -142,7 +142,6 @@ namespace backend.Controllers
             }
             catch (System.Exception)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
 
