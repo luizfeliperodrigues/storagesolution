@@ -19,13 +19,12 @@ export class AuctionComponent implements OnInit {
   auctionsFiltrados: Auction[];
   auctions: Auction[];
   auction: Auction;
-  filtro: string;
   registerForm: FormGroup;
   bodyDeleteAuction = '';
 
   infoSave = 'post';
 
-  filtrolista: number;
+  filtrolista: string;
 
   constructor(
       private auctionService: AuctionService
@@ -34,13 +33,13 @@ export class AuctionComponent implements OnInit {
     , private localeService: BsLocaleService
     , private toastr: ToastrService
   ) {
-    this.localeService.use('pt-br')
+    this.localeService.use('pt-br');
    }
 
-  get filtroLista(): number{
+  get filtroLista(): string{
     return this.filtrolista;
   }
-  set filtroLista(value: number){
+  set filtroLista(value: string){
     this.filtrolista = value;
     this.auctionsFiltrados = this.filtroLista ? this.filtrarAuctions(this.filtroLista) : this.auctions;
   }
@@ -86,11 +85,13 @@ export class AuctionComponent implements OnInit {
     this.getAuctions();
   }
 
-  filtrarAuctions(filtrarPor: number): Auction[] {
-    this.filtro = filtrarPor.toLocaleString();
-    console.log(this.filtro);
+  filtrarAuctions(filtrarPor: string): Auction[] {
+    filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.auctions.filter(
-      a => a.businessCode.toLocaleString().indexOf(this.filtro) !== -1
+      i => {
+        const aux = i.businessCode + '';
+        return aux.indexOf(filtrarPor) !== -1;
+      }
     );
   }
 

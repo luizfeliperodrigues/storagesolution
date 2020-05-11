@@ -32,7 +32,7 @@
   </thead>
   
   <tbody *ngIf="auctions && auctions.length">
-    <tr *ngFor="let auction of auctions">
+    <tr *ngFor="let auction of auctionsFiltrados">
       <td>{{auction.id}}</td>
       <td>{{auction.businessCode}}</td>
       <td>{{auction.negotiation}}</td>
