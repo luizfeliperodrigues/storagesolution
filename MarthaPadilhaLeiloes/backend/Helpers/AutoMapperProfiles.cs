@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using backend.DTOs;
 using domain;
+using domain.Identity;
 
 namespace backend.Helpers
 {
@@ -23,6 +24,9 @@ namespace backend.Helpers
             CreateMap<Comitente, ComitenteDTO>().ReverseMap();
             CreateMap<Negotiation, NegotiationDTO>().ReverseMap();
             CreateMap<TipoItem, TipoItemDTO>().ReverseMap();
+
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserLoginDTO>().ReverseMap();
         }
     }
 }
