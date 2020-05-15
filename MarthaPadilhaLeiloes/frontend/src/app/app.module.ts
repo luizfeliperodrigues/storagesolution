@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -21,8 +21,13 @@ import { AuctionComponent } from './auction/auction.component';
 import { ItemComponent } from './item/item.component';
 import { ContatoComponent } from './contato/contato.component';
 import { TituloComponent } from './_shared/titulo/titulo.component';
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 
 import { DateTimeFormatPipePipe } from './_helper/DateTimeFormatPipe.pipe';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { ItemService } from './_services/item.service';
 
 @NgModule({
    declarations: [
@@ -34,8 +39,11 @@ import { DateTimeFormatPipePipe } from './_helper/DateTimeFormatPipe.pipe';
       ItemComponent,
       ContatoComponent,
       TituloComponent,
-      DateTimeFormatPipePipe,
-      ContatoComponent
+      ContatoComponent,
+      UserComponent,
+      LoginComponent,
+      RegistrationComponent,
+      DateTimeFormatPipePipe
    ],
    imports: [
       BrowserModule,
@@ -52,7 +60,13 @@ import { DateTimeFormatPipePipe } from './_helper/DateTimeFormatPipe.pipe';
    ],
    providers: [
       ComitenteService,
-      AuctionService
+      AuctionService,
+      ItemService,
+      {
+         provide: HTTP_INTERCEPTORS,
+         useClass: AuthInterceptor,
+         multi: true
+      }
    ],
    bootstrap: [
       AppComponent

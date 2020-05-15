@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Auction } from '../_models/Auction';
 
@@ -9,7 +9,9 @@ import { Auction } from '../_models/Auction';
 export class AuctionService {
   baseURL = 'http://localhost:5000/api/auction';
 
-constructor(private http: HttpClient) { }
+constructor(private http: HttpClient) {
+
+ }
 
 getAllAuction(): Observable<Auction[]>{
   return this.http.get<Auction[]>(`${this.baseURL}`);
